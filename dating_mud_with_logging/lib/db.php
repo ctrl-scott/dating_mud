@@ -10,10 +10,10 @@ error_reporting(E_ALL);
 
 // Database configuration
 define('DB_HOST', 'localhost');
-define('DB_PORT', '3306'); // Default MySQL port
-define('DB_NAME', 'scottina_dating_mud');
-define('DB_USER', 'scottina');
-define('DB_PASS', 'Flossy1978123!'); // Update this securely for production
+define('DB_PORT', ''); // Default MySQL port
+define('DB_NAME', '');
+define('DB_USER', '');
+define('DB_PASS', ''); // Update this securely for production
 
 try {
     $pdo = new PDO(
