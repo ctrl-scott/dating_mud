@@ -1,0 +1,11 @@
+{
+  "regions": [
+    {
+      "name": "Midwest Corridor",
+      "population_density": 91,
+      "median_income": 54000,
+      "avg_age": 38,
+      "std_health_score": 72
+    }
+  ]
+}

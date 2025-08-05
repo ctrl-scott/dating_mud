@@ -1,0 +1,74 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+?>
+<?php
+/**
+ * install.php – MUD Installer
+ * 
+ * MLA Citation:
+ * Owen, Scott. “Heartland Crawl - A Dating-Themed MUD.” ChatGPT, OpenAI, 2025.
+ * PHP Documentation. https://www.php.net/manual/en/
+ * MySQL Documentation. https://dev.mysql.com/doc/
+ */
+
+$host = 'localhost';
+$dbname = 'scottina_dating_mud';
+$user = 'scottina';
+$pass = 'Flossy1978123!'; // Replace with your MySQL password
+
+try {
+    $pdo = new PDO("mysql:host=$host", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "<p>✅ Connected to MySQL server.</p>";
+
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+    echo "<p>✅ Database '$dbname' created or already exists.</p>";
+
+    $pdo->exec("USE `$dbname`");
+
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(50) UNIQUE NOT NULL,
+            password_hash VARCHAR(255) NOT NULL,
+            faction VARCHAR(50),
+            region VARCHAR(100),
+            stats JSON,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ");
+    echo "<p>✅ Table 'users' created.</p>";
+
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS encounters (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT,
+            npc_profile JSON,
+            outcome TEXT,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+    ");
+    echo "<p>✅ Table 'encounters' created.</p>";
+
+    $demoStats = json_encode([
+        "health" => 75,
+        "charm" => 50,
+        "wealth" => 30
+    ]);
+
+    $pdo->prepare("INSERT IGNORE INTO users (username, password_hash, faction, region, stats) VALUES (?, ?, ?, ?, ?)")
+        ->execute(["demo_user", password_hash("demo123", PASSWORD_BCRYPT), "Wanderer", "Midwest Corridor", $demoStats]);
+
+    echo "<p>✅ Demo user inserted.</p>";
+
+    echo "<h3>🎉 Installation Complete</h3>";
+    echo "<p>You can now start using the MUD system.</p>";
+
+} catch (PDOException $e) {
+    echo "<p>❌ Error: " . $e->getMessage() . "</p>";
+    exit;
+}
+?>
