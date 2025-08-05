@@ -14,9 +14,9 @@ error_reporting(E_ALL);
  */
 
 $host = 'localhost';
-$dbname = 'scottina_dating_mud';
-$user = 'scottina';
-$pass = 'Flossy1978123!'; // Replace with your MySQL password
+$dbname = '';
+$user = '';
+$pass = ''; // Replace with your MySQL password
 
 try {
     $pdo = new PDO("mysql:host=$host", $user, $pass);
